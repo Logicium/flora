@@ -1,4 +1,4 @@
-import {CreateOrderDto} from "../order/create-order.dto";
+import {CreateOrderDto} from "../dto/create-order.dto";
 import {Injectable} from "@nestjs/common";
 
 @Injectable()

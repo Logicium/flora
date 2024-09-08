@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import {OrderController} from "./order/order.controller";
-import {PaymentController} from "./payment/payment.controller";
-import {ProductController} from "./product/product.controller";
-import {OrderService} from "./order/order.service";
-import {PaymentService} from "./payment/payment.service";
-import {ProductService} from "./product/product.service";
+import {OrderController} from "./controllers/order.controller";
+import {PaymentController} from "./controllers/payment.controller";
+import {ProductController} from "./controllers/product.controller";
+import {OrderService} from "./services/order.service";
+import {PaymentService} from "./services/payment.service";
+import {ProductService} from "./services/product.service";
 import {MikroOrmModule} from "@mikro-orm/nestjs";
-import {SqliteDriver} from "@mikro-orm/sqlite";
 
 @Module({
   imports: [

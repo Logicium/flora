@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { ProductService } from '../product/product.service';
-import { PaymentService } from '../payment/payment.service';
-import {CreateOrderDto} from "./create-order.dto";
+import { ProductService } from './product.service';
+import { PaymentService } from './payment.service';
+import {CreateOrderDto} from "../dto/create-order.dto";
 
 @Injectable()
 export class OrderService {

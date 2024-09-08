@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {Product} from "../modules/product.entity";
+import {Product} from "../entities/product.entity";
 import { MikroORM } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/mysql';
 
@@ -13,7 +13,7 @@ export class ProductService {
     async addSampleProducts(){
         const product = new Product();
         product.name = 'Lavender Sendoffs';
-        product.desc = 'Lavender has been used for centuries to promoted calm before a journey.';
+        product.desc1 = 'Lavender has been used for centuries to promoted calm before a journey.';
         product.price = 4;
         product.image = './src/images/image1.jpg'
         // first mark the entity with `persist()`, then `flush()`
@@ -23,6 +23,12 @@ export class ProductService {
         console.log('user id is:', product.id);
     }
 
+    async getProducts(){
+        const allProducts = await this.em.find(Product, {});
+        await this.em.flush();
+        console.log(allProducts);
+        return allProducts;
+    }
     async validateProducts(products: []){
 
     }

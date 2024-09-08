@@ -1,5 +1,5 @@
 import {Controller, Post} from "@nestjs/common";
-import {PaymentService} from "./payment.service";
+import {PaymentService} from "../services/payment.service";
 import * as string_decoder from "string_decoder";
 
 @Controller('payment')

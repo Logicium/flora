@@ -1,5 +1,6 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import {Entity, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
 import {BaseEntity} from "./base.entity";
+import {Inventory} from "./inventory.entity";
 
 @Entity()
 export class Product extends BaseEntity{
@@ -14,10 +15,9 @@ export class Product extends BaseEntity{
     price!: number;
 
     @Property({ type: 'text' })
-    desc1!: string;
+    description!: string;
 
-    @Property({ type: 'text' })
-    desc2!: string;
-
+    @Property({default:0})
+    inventory!: number;
 
 }

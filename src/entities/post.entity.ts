@@ -13,10 +13,7 @@ export class Post extends BaseEntity{
     author!: User;
 
     @Property({ type: 'text' })
-    desc1!: string;
-
-    @Property({ type: 'text' })
-    desc2!: string;
+    description!: string;
 
     @Property({ type: 'text' })
     body!: string;

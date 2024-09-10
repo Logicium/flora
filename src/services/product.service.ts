@@ -13,7 +13,7 @@ export class ProductService {
     async addSampleProducts(){
         const product = new Product();
         product.name = 'Lavender Sendoffs';
-        product.desc1 = 'Lavender has been used for centuries to promoted calm before a journey.';
+        product.description = 'Lavender has been used for centuries to promoted calm before a journey.';
         product.price = 4;
         product.image = './src/images/image1.jpg'
         // first mark the entity with `persist()`, then `flush()`
@@ -29,6 +29,14 @@ export class ProductService {
         console.log(allProducts);
         return allProducts;
     }
+
+    async getProduct(id:number){
+        const product = await this.em.findOne(Product, {id:id});
+        await this.em.flush();
+        console.log(product);
+        return product;
+    }
+
     async validateProducts(products: []){
 
     }

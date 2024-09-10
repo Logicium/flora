@@ -11,7 +11,7 @@ export class User extends BaseEntity{
     @Property()
     lastName!: string;
 
-    @Property()
+    @Property({nullable:true})
     phone!: string;
 
     @Property()
@@ -20,43 +20,43 @@ export class User extends BaseEntity{
     @Property()
     password!: string;
 
-    @Property()
+    @Property({default:false})
     smsAlerts!: boolean;
 
-    @Property()
+    @Property({default:false})
     emailAlerts!: boolean;
 
     @OneToMany( 'Order','user')
     orders= new Collection<Order>(this);
 
-    @Property()
+    @Property({ default: '' })
     sAddress1!: string;
 
-    @Property()
+    @Property({ default: '' })
     sAddress2!: string;
 
-    @Property()
+    @Property({ default: '' })
     sCity!: string;
 
-    @Property()
+    @Property({ default: '' })
     sState!: string;
 
-    @Property()
+    @Property({ default: '' })
     sZip!: string;
 
-    @Property()
+    @Property({ default: '' })
     bAddress1!: string;
 
-    @Property()
+    @Property({ default: '' })
     bAddress2!: string;
 
-    @Property()
+    @Property({ default: '' })
     bCity!: string;
 
-    @Property()
+    @Property({ default: '' })
     bState!: string;
 
-    @Property()
+    @Property({ default: '' })
     bZip!: string;
 
 }

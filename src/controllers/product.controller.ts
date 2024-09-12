@@ -16,7 +16,7 @@ export class ProductController {
         return product;
     }
 
-    @Get('list')
+    @Get('/')
     async getProducts(){
         const allProducts = await this.productService.getProducts();
         return allProducts;

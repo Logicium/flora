@@ -13,6 +13,10 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import {EmailController} from "./controllers/email.controller";
 import {EmailService} from "./services/email.service";
 import secrets from "../app.secret";
+import {AuthController} from "./controllers/auth.controller";
+import {AuthService} from "./services/auth.service";
+import {UserService} from "./services/user.service";
+import {JwtService} from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -36,8 +40,8 @@ import secrets from "../app.secret";
       },
     }),
   ],
-  controllers: [AppController,OrderController,PaymentController,ProductController,EmailController],
-  providers: [AppService,OrderService,PaymentService,ProductService,EmailService],
+  controllers: [AppController,OrderController,PaymentController,ProductController,EmailController,AuthController],
+  providers: [AppService,OrderService,PaymentService,ProductService,EmailService,AuthService,UserService,JwtService],
 })
 
 export class AppModule {}

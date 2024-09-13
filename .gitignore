@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+# Secrets
+./app.secret.ts
+
 # Logs
 logs
 *.log

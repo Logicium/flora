@@ -12,6 +12,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import {EmailController} from "./controllers/email.controller";
 import {EmailService} from "./services/email.service";
+import secrets from "../app.secret";
 
 @Module({
   imports: [
@@ -21,10 +22,7 @@ import {EmailService} from "./services/email.service";
         host: 'smtp.mailgun.org',
         port: Number(587),
         secure: false,
-        auth: {
-          user: 'postmaster@sandboxa845deaa192b498884545cae79d50c52.mailgun.org',
-          pass: '***REMOVED***',
-        },
+        auth: secrets.email.auth,
       },
       defaults: {
         from: '"FLORA SHOP" <postmaster@sandboxa845deaa192b498884545cae79d50c52.mailgun.org>',

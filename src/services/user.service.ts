@@ -3,6 +3,7 @@ import {Product} from "../entities/product.entity";
 import { MikroORM } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/mysql';
 import {User} from "../entities/user.entity";
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
@@ -29,6 +30,17 @@ export class UserService {
         const user = await this.em.findOne(User, {email:email});
         await this.em.flush();
         console.log(user);
+        return user;
+    }
+
+    async newUser(signupInfo:any){
+        const saltOrRounds = 10;
+        const password = signupInfo.password;
+        const hash = await bcrypt.hash(password, saltOrRounds);
+        const user = this.em.create(User,{
+            email: signupInfo.email,
+            password:hash
+        });
         return user;
     }
 

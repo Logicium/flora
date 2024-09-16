@@ -6,19 +6,13 @@ import {Order} from "./order.entity";
 export class User extends BaseEntity{
 
     @Property()
-    firstName!: string;
-
-    @Property()
-    lastName!: string;
-
-    @Property({nullable:true})
-    phone!: string;
-
-    @Property()
     email!: string;
 
     @Property()
     password!: string;
+
+    @Property({nullable:true})
+    phone!: string;
 
     @Property({default:false})
     smsAlerts!: boolean;
@@ -28,6 +22,12 @@ export class User extends BaseEntity{
 
     @OneToMany( 'Order','user')
     orders= new Collection<Order>(this);
+
+    @Property({default: '' })
+    sFirstName!: string;
+
+    @Property({default: '' })
+    sLastName!: string;
 
     @Property({ default: '' })
     sAddress1!: string;
@@ -43,6 +43,12 @@ export class User extends BaseEntity{
 
     @Property({ default: '' })
     sZip!: string;
+
+    @Property({default: '' })
+    bFirstName!: string;
+
+    @Property({default: '' })
+    bLastName!: string;
 
     @Property({ default: '' })
     bAddress1!: string;

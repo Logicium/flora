@@ -17,6 +17,7 @@ import {AuthController} from "./controllers/auth.controller";
 import {AuthService} from "./services/auth.service";
 import {UserService} from "./services/user.service";
 import {JwtService} from "@nestjs/jwt";
+import {UserController} from "./controllers/user.controller";
 
 @Module({
   imports: [
@@ -40,7 +41,7 @@ import {JwtService} from "@nestjs/jwt";
       },
     }),
   ],
-  controllers: [AppController,OrderController,PaymentController,ProductController,EmailController,AuthController],
+  controllers: [AppController,OrderController,PaymentController,ProductController,EmailController,AuthController,UserController],
   providers: [AppService,OrderService,PaymentService,ProductService,EmailService,AuthService,UserService,JwtService],
 })
 

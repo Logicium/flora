@@ -1,4 +1,4 @@
-import {Controller, Post, Body, Get, Param, Query} from '@nestjs/common';
+import {Controller, Headers, Post, Body, Get, Param, Query, Req, RawBodyRequest} from '@nestjs/common';
 import { OrderService } from '../services/order.service';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import Stripe from 'stripe';
@@ -6,22 +6,50 @@ import secrets from "../../app.secret"; // TypeScript compatible import
 
 @Controller('order')
 export class OrderController {
-    constructor(private readonly orderService: OrderService) {}
+    constructor(private readonly orderService: OrderService) {
 
-    @Post()
-    async createOrder(@Body() createOrderDto:
-                          CreateOrderDto) {
-        return this.orderService.createOrder(createOrderDto);
+    }
+
+    @Get('/list')
+    async createOrder() {
+        return this.orderService.getAllOrders();
+    }
+
+    @Post('/webhook')
+    async webhook(@Headers('stripe-signature') signature: string, @Req() req: RawBodyRequest<Request>) {
+        const stripe = new Stripe(secrets.stripe.secret, {apiVersion: '2024-06-20'});
+        const payload = req.rawBody;
+        const event = await stripe.webhooks.constructEvent(
+            payload,
+            signature,
+            secrets.stripe.webhook
+        );
+        // console.log(event.type,event.data);
+
+        if(event.type === 'checkout.session.completed' ){
+            console.log('Checkout Complete');
+
+            const sessionId = event.data.object.id;
+            const total = event.data.object.amount_total;
+            const email = event.data.object.customer_details.email;
+            console.log(sessionId,total,email);
+            const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
+            console.log(lineItems);
+
+            this.orderService.createOrder(email, total, lineItems.data);
+        }
+        return {received: true}
     }
 
     @Get('/session-status')
     async sessionStatus(@Query('session_id') sessionId){
         const stripe = new Stripe(secrets.stripe.secret, {apiVersion: '2024-06-20'});
         const session = await stripe.checkout.sessions.retrieve(sessionId);
-
+        console.log(session);
         return {
             status: session.status,
-            customer_email: session.customer_details.email
+            customer_email: session.customer_details.email,
+            line_items: session.line_items
         };
     }
 

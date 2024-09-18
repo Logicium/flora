@@ -14,6 +14,9 @@ export class Product extends BaseEntity{
     @Property()
     price!: number;
 
+    @Property()
+    priceId!: string;
+
     @Property({ type: 'text' })
     description!: string;
 

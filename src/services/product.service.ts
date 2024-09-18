@@ -1,7 +1,8 @@
 import {Injectable} from "@nestjs/common";
 import {Product} from "../entities/product.entity";
-import { MikroORM } from '@mikro-orm/core';
+import {Collection, MikroORM} from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/mysql';
+import {Order} from "../entities/order.entity";
 
 @Injectable()
 export class ProductService {
@@ -26,7 +27,7 @@ export class ProductService {
     async getProducts(){
         const allProducts = await this.em.find(Product, {});
         await this.em.flush();
-        console.log(allProducts);
+        //console.log(allProducts);
         return allProducts;
     }
 
@@ -37,7 +38,13 @@ export class ProductService {
         return product;
     }
 
-    async validateProducts(products: []){
-
+    async linkProducts(order:Order,products){
+        const productList= order.products;
+        for (const product of products) {
+            const productEntity = await this.em.findOne(Product,{priceId:product.price.id});
+            productList.add(productEntity);
+        }
+        await this.em.flush();
+        return productList;
     }
 }

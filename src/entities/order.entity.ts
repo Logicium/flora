@@ -9,16 +9,16 @@ export class Order extends BaseEntity{
     @ManyToMany( () => Product )
     products = new Collection<Product>(this);
 
-    @ManyToOne()
+    @ManyToOne({nullable:true})
     user!: User;
 
     @Property()
     total!: number;
 
-    @Property({ type: 'text' })
+    @Property({ default: 'IN PROGRESS' })
     status!: string;
 
-    @Property()
-    createdOn = new Date();
+    @Property({ defaultRaw: 'now' })
+    createdOn!: Date;
 
 }

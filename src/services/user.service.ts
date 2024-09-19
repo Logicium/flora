@@ -13,21 +13,21 @@ export class UserService {
     ) {}
 
     async getUsers(){
-        const allUsers = await this.em.find(User, {});
+        const allUsers = await this.em.find(User, {},{populate:['orders','orders.products']});
         await this.em.flush();
         console.log(allUsers);
         return allUsers;
     }
 
     async getUserById(id:number){
-        const user = await this.em.findOne(User, {id:id});
+        const user = await this.em.findOne(User, {id:id},{populate:['orders','orders.products']});
         await this.em.flush();
         console.log(user);
         return user;
     }
 
     async getUserByEmail(email:string){
-        const user = await this.em.findOne(User, {email:email});
+        const user = await this.em.findOne(User, {email:email},{populate:['orders','orders.products']});
         await this.em.flush();
         console.log(user);
         return user;

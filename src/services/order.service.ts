@@ -24,32 +24,24 @@ export class OrderService {
     async createOrder(email:string,total:number,productList) {
 
         const user = await this.userService.getUserByEmail(email);
-
-        // const order = await this.em.create(Order,{
-        //     user: user,
-        //     total:total,
-        // });
-
         const order = new Order();
         order.user = user;
         order.total = total;
         order.createdOn = new Date();
-        await this.em.persist(order).flush();
-        const newOrder = await this.em.findOne(Order,order)
-        await newOrder.products.init();
-
         for (const product of productList) {
             const productEntity = await this.em.findOne(Product,{priceId:product.price.id});
-            newOrder.products.add(productEntity);
+            order.products.add(productEntity);
         }
-
-        await this.em.flush();
-
-
+        await this.em.persist(order).flush();
     }
 
     async getAllOrders(){
         const orders = await this.em.find(Order,{},{ populate: ['products'] } );
+        return orders;
+    }
+
+    async getUserOrders(user){
+        const orders = await this.em.find(Order,{user:user.id},{ populate: ['products'] } );
         return orders;
     }
 }

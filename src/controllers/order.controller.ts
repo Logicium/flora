@@ -6,9 +6,7 @@ import secrets from "../../app.secret"; // TypeScript compatible import
 
 @Controller('order')
 export class OrderController {
-    constructor(private readonly orderService: OrderService) {
-
-    }
+    constructor(private readonly orderService: OrderService) {}
 
     @Get('/list')
     async createOrder() {
@@ -54,17 +52,21 @@ export class OrderController {
     }
 
     @Post('/create-checkout-session')
-    async checkout(@Body() createCheckout){
+    async checkout(@Body() createCheckout:any){
         const stripe = new Stripe(secrets.stripe.secret, {apiVersion: '2024-06-20'}); // Using new keyword because Stripe is a class
+        const lineItems = [];
+        console.log(createCheckout);
+        for(let i=0;i<createCheckout.length;i++){
+            let lineItem = {
+                price: createCheckout[i].priceId,
+                quantity: createCheckout[i].quantity
+            };
+            lineItems.push(lineItem);
+        }
+
         const session = await stripe.checkout.sessions.create({
             ui_mode: 'embedded',
-            line_items: [
-                {
-                    // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    price: 'price_1PzoGP06xeklz4Gn7wd5DB4w',
-                    quantity: 1,
-                },
-            ],
+            line_items: lineItems,
             mode: 'payment',
             shipping_address_collection:{
                 allowed_countries:["US","CA","MX"]

@@ -35,6 +35,11 @@ export class OrderService {
         await this.em.persist(order).flush();
     }
 
+    async getOrder(id:number){
+        const order = await this.em.findOne(Order,{id:id},{ populate: ['products'] });
+        return order;
+    }
+
     async getAllOrders(){
         const orders = await this.em.find(Order,{},{ populate: ['products'] } );
         return orders;

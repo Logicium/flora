@@ -1,16 +1,23 @@
-import {Controller, Headers, Post, Body, Get, Param, Query, Req, RawBodyRequest} from '@nestjs/common';
+import {Controller, Headers, Post, Body, Get, Param, Query, Req, RawBodyRequest, UseGuards} from '@nestjs/common';
 import { OrderService } from '../services/order.service';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import Stripe from 'stripe';
-import secrets from "../../app.secret"; // TypeScript compatible import
+import secrets from "../../app.secret";
+import {AuthGuard} from "../auth.guard"; // TypeScript compatible import
 
 @Controller('order')
 export class OrderController {
     constructor(private readonly orderService: OrderService) {}
 
     @Get('/list')
-    async createOrder() {
+    async getOrders() {
         return this.orderService.getAllOrders();
+    }
+
+    @UseGuards(AuthGuard)
+    @Get(':id')
+    async getOrder(@Param() params: any){
+        return this.orderService.getOrder(params.id);
     }
 
     @Post('/webhook')

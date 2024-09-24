@@ -54,7 +54,7 @@ export class OrderService {
         return orders;
     }
 
-    async createOrderByCharge(paymentId: string, billingInfo, paymentInfo, receiptUrl: string) {
+    async createOrderByCharge(paymentId: string, billingInfo, paymentInfo:{}, receiptUrl: string) {
         const order = new Order();
         order.paymentId = paymentId;
         order.createdOn = new Date();
@@ -66,11 +66,13 @@ export class OrderService {
 
     }
 
-    async updateOrderByCharge(paymentId: string, email: string, total: number, lineItems, event: Stripe.Checkout.Session) {
+    async updateOrderByCharge(paymentId: string, email: string, total: number, lineItems:Array<Stripe.LineItem>, event: Stripe.Checkout.Session) {
         const user = await this.userService.getUserByEmail(email);
         const order = await this.em.findOne(Order,{paymentId:paymentId});
         order.user = user;
         order.total = total;
+        order.subtotal = event.amount_subtotal;
+        order.tax = event.total_details.amount_tax;
         order.shippingCost = event.shipping_cost.amount_total;
         order.shippingInfo = event.shipping_details;
         order.shippingMethod = event.shipping_options;

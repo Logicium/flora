@@ -44,7 +44,7 @@ export class OrderController {
             const total = event.data.object.amount_total;
             const email = event.data.object.customer_details.email;
             const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
-
+            console.log(lineItems.data[0]);
             await this.orderService.updateOrderByCharge(
                 paymentId, email, total, lineItems.data, event.data.object
             );

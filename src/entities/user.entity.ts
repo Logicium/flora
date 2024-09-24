@@ -1,4 +1,4 @@
-import {Collection, Entity, OneToMany, PrimaryKey, Property} from '@mikro-orm/core';
+import {Collection, Entity, Hidden, OneToMany, PrimaryKey, Property} from '@mikro-orm/core';
 import {BaseEntity} from "./base.entity";
 import {Order} from "./order.entity";
 
@@ -8,8 +8,8 @@ export class User extends BaseEntity{
     @Property()
     email!: string;
 
-    @Property()
-    password!: string;
+    @Property({ hidden: true })
+    password!: string & Hidden;
 
     @Property({nullable:true})
     phone!: string;

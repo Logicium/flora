@@ -14,12 +14,6 @@ export class OrderController {
         return this.orderService.getAllOrders();
     }
 
-    @UseGuards(AuthGuard)
-    @Get(':id')
-    async getOrder(@Param() params: any){
-        return this.orderService.getOrder(params.id);
-    }
-
     @Post('/webhook')
     async webhook(@Headers('stripe-signature') signature: string, @Req() req: RawBodyRequest<Request>) {
         const stripe = new Stripe(secrets.stripe.secret, {apiVersion: '2024-06-20'});
@@ -29,20 +23,43 @@ export class OrderController {
             signature,
             secrets.stripe.webhook
         );
-        // console.log(event.type,event.data);
+        console.log(event.type,event.data);
+
+        if(event.type === 'charge.succeeded'){
+            //const session = await stripe.checkout.sessions.list({payment_intent:event.data.object.payment_intent.toString(),limit:1});
+            // const order = await this.orderService.getOrderBySession(session.data[0].id);
+            // order.receiptUrl = event.data.object.receipt_url;
+            const billingInfo = event.data.object.billing_details;
+            const paymentInfo = event.data.object.payment_method_details;
+            const receiptUrl = event.data.object.receipt_url;
+            const paymentId = event.data.object.payment_intent.toString();
+            const order = await this.orderService.createOrderByCharge(paymentId,billingInfo,paymentInfo,receiptUrl);
+
+        }
 
         if(event.type === 'checkout.session.completed' ){
             console.log('Checkout Complete');
-
+            const paymentId = event.data.object.payment_intent.toString();
             const sessionId = event.data.object.id;
             const total = event.data.object.amount_total;
             const email = event.data.object.customer_details.email;
-            console.log(sessionId,total,email);
             const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
-            console.log(lineItems);
 
-            this.orderService.createOrder(email, total, lineItems.data);
+            await this.orderService.updateOrderByCharge(
+                paymentId, email, total, lineItems.data, event.data.object
+            );
+
+            // const sessionId = event.data.object.id;
+            // const total = event.data.object.amount_total;
+            // const email = event.data.object.customer_details.email;
+            // const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
+            // console.log(lineItems);
+            // this.orderService.createOrder(
+            //     email, total, lineItems.data, event.data.object, lineItems
+            // );
         }
+
+
         return {received: true}
     }
 
@@ -54,7 +71,6 @@ export class OrderController {
         return {
             status: session.status,
             customer_email: session.customer_details.email,
-            line_items: session.line_items
         };
     }
 
@@ -75,6 +91,8 @@ export class OrderController {
             ui_mode: 'embedded',
             line_items: lineItems,
             mode: 'payment',
+            billing_address_collection: 'required',
+            automatic_tax: { enabled: true },
             shipping_address_collection:{
                 allowed_countries:["US","CA","MX"]
             },
@@ -104,5 +122,11 @@ export class OrderController {
         });
 
         return {clientSecret: session.client_secret};
+    }
+
+    @UseGuards(AuthGuard)
+    @Get(':id')
+    async getOrder(@Param() params: any){
+        return this.orderService.getOrder(params.id);
     }
 }

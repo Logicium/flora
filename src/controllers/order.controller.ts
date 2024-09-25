@@ -2,8 +2,8 @@ import {Controller, Headers, Post, Body, Get, Param, Query, Req, RawBodyRequest,
 import { OrderService } from '../services/order.service';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import Stripe from 'stripe';
-import secrets from "../../app.secret";
-import {AuthGuard} from "../auth.guard"; // TypeScript compatible import
+import {AuthGuard} from "../auth.guard";
+import * as process from "process"; // TypeScript compatible import
 
 @Controller('order')
 export class OrderController {
@@ -16,12 +16,12 @@ export class OrderController {
 
     @Post('/webhook')
     async webhook(@Headers('stripe-signature') signature: string, @Req() req: RawBodyRequest<Request>) {
-        const stripe = new Stripe(secrets.stripe.secret, {apiVersion: '2024-06-20'});
+        const stripe = new Stripe(process.env.STRIPE_SECRET, {apiVersion: '2024-06-20'});
         const payload = req.rawBody;
         const event = await stripe.webhooks.constructEvent(
             payload,
             signature,
-            secrets.stripe.webhook
+            process.env.STRIPE_WEBHOOK
         );
         console.log(event.type,event.data);
 
@@ -48,24 +48,13 @@ export class OrderController {
             await this.orderService.updateOrderByCharge(
                 paymentId, email, total, lineItems.data, event.data.object
             );
-
-            // const sessionId = event.data.object.id;
-            // const total = event.data.object.amount_total;
-            // const email = event.data.object.customer_details.email;
-            // const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
-            // console.log(lineItems);
-            // this.orderService.createOrder(
-            //     email, total, lineItems.data, event.data.object, lineItems
-            // );
         }
-
-
         return {received: true}
     }
 
     @Get('/session-status')
     async sessionStatus(@Query('session_id') sessionId){
-        const stripe = new Stripe(secrets.stripe.secret, {apiVersion: '2024-06-20'});
+        const stripe = new Stripe(process.env.STRIPE_SECRET, {apiVersion: '2024-06-20'});
         const session = await stripe.checkout.sessions.retrieve(sessionId);
         console.log(session);
         return {
@@ -76,7 +65,7 @@ export class OrderController {
 
     @Post('/create-checkout-session')
     async checkout(@Body() createCheckout:any){
-        const stripe = new Stripe(secrets.stripe.secret, {apiVersion: '2024-06-20'}); // Using new keyword because Stripe is a class
+        const stripe = new Stripe(process.env.STRIPE_SECRET, {apiVersion: '2024-06-20'}); // Using new keyword because Stripe is a class
         const lineItems = [];
         console.log(createCheckout);
         for(let i=0;i<createCheckout.length;i++){

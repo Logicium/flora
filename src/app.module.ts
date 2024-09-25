@@ -12,22 +12,24 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import {EmailController} from "./controllers/email.controller";
 import {EmailService} from "./services/email.service";
-import secrets from "../app.secret";
 import {AuthController} from "./controllers/auth.controller";
 import {AuthService} from "./services/auth.service";
 import {UserService} from "./services/user.service";
 import {JwtService} from "@nestjs/jwt";
 import {UserController} from "./controllers/user.controller";
+import * as process from "process";
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MikroOrmModule.forRoot(),
     MailerModule.forRoot({
       transport: {
         host: 'smtp.mailgun.org',
         port: Number(587),
         secure: false,
-        auth: secrets.email.auth,
+        auth: {user:process.env.EMAIL_USER,pass:process.env.EMAIL_PASS}
       },
       defaults: {
         from: '"FLORA SHOP" <postmaster@sandboxa845deaa192b498884545cae79d50c52.mailgun.org>',

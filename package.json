@@ -9,7 +9,7 @@
   "scripts": {
     "build": "nest build",
     "gcp-build": "nest build",
-    "heroku-postbuild": "npm install && npm install --only=dev --no-shrinkwrap && npm run build",
+    "heroku-postbuild": "npm install && npm install --only=dev --no-shrinkwrap",
     "format": "prettier --write \\\"src/**/*.ts\\\" \\\"test/**/*.ts\\\"",
     "start": "node dist/src/main.js",
     "start:dev": "nest start --watch",

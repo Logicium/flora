@@ -107,7 +107,7 @@ export class OrderController {
                     },
                 },
             ],
-            return_url: `http://localhost:5173/confirmation?session_id={CHECKOUT_SESSION_ID}`,
+            return_url: `/confirmation?session_id={CHECKOUT_SESSION_ID}`,
         });
 
         return {clientSecret: session.client_secret};

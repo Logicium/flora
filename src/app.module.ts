@@ -24,7 +24,6 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      ignoreEnvFile: true,
     }),
     MikroOrmModule.forRoot(),
     MailerModule.forRoot({

@@ -107,7 +107,7 @@ export class OrderController {
                     },
                 },
             ],
-            return_url: `/confirmation?session_id={CHECKOUT_SESSION_ID}`,
+            return_url: `https://flora-ui.vercel.app/confirmation?session_id={CHECKOUT_SESSION_ID}`,
         });
 
         return {clientSecret: session.client_secret};

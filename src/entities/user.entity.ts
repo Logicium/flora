@@ -1,4 +1,4 @@
-import {Collection, Entity, Hidden, OneToMany, PrimaryKey, Property} from '@mikro-orm/core';
+import {Collection, Entity, Hidden, OneToMany, Property} from '@mikro-orm/core';
 import {BaseEntity} from "./base.entity";
 import {Order} from "./order.entity";
 
